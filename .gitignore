@@ -1,7 +1,5 @@
 node_modules
 npm-debug.log
-assets/css/
-assets/js/
 flow-typed/npm/
 .vscode
 yarn.lock
