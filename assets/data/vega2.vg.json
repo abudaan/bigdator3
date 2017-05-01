@@ -1,0 +1,101 @@
+{
+    "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+    "width": 400,
+    "height": 200,
+    "padding": 5,
+    "data": [
+        {
+            "name": "points",
+            "values": [
+                {
+                    "category": 1,
+                    "amount": 28
+                },
+                {
+                    "category": 2,
+                    "amount": 55
+                },
+                {
+                    "category": 3,
+                    "amount": 43
+                },
+                {
+                    "category": 4,
+                    "amount": 91
+                },
+                {
+                    "category": 5,
+                    "amount": 81
+                },
+                {
+                    "category": 6,
+                    "amount": 53
+                },
+                {
+                    "category": 7,
+                    "amount": 19
+                },
+                {
+                    "category": 8,
+                    "amount": 87
+                }
+            ]
+        }
+    ],
+    "scales": [
+        {
+            "name": "xscale",
+            "type": "band",
+            "domain": {
+                "data": "points",
+                "field": "category"
+            },
+            "range": "width"
+        },
+        {
+            "name": "yscale",
+            "domain": {
+                "data": "points",
+                "field": "amount"
+            },
+            "nice": true,
+            "range": "height"
+        }
+    ],
+    "axes": [
+        {
+            "orient": "bottom",
+            "scale": "xscale"
+        },
+        {
+            "orient": "left",
+            "scale": "yscale"
+        }
+    ],
+    "marks": [
+        {
+            "type": "line",
+            "from": {
+                "data": "points"
+            },
+            "encode": {
+                "enter": {
+                    "x": {
+                        "scale": "xscale",
+                        "field": "category"
+                    },
+                    "y": {
+                        "scale": "yscale",
+                        "field": "amount"
+                    },
+                    "stroke": {
+                        "value": "#5357a1"
+                    },
+                    "strokeWidth": {
+                        "value": 2
+                    }
+                }
+            }
+        }
+    ]
+}
