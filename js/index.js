@@ -8,6 +8,7 @@ const alphabet = 'ABCDEFGHIJK';
 
 let view1;
 let view2;
+let highlightedPoint = null;
 
 fetchJSON('./assets/data/vega1.vg.json')
 .then((data) => {
@@ -31,7 +32,19 @@ fetchJSON('./assets/data/vega1.vg.json')
     view1.addSignalListener('tooltip', (name, data) => {
         if (R.isNil(data.category) === false) {
             const i = R.findIndex(c => c === R.toUpper(data.category))(alphabet);
-            console.log(data.category, i);
+            const newHighlightedPoint = {
+                category: i + 1,
+                amount: data.amount,
+            };
+            view2
+            .change('highlightedPoint',
+                vega.changeset()
+                .insert([newHighlightedPoint])
+                .remove(highlightedPoint),
+            )
+            .run();
+            highlightedPoint = newHighlightedPoint;
+            // console.log(data.category, i);
         }
     });
 });

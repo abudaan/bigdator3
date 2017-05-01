@@ -40,6 +40,9 @@
                     "amount": 87
                 }
             ]
+        },
+        {
+            "name": "highlightedPoint"
         }
     ],
     "scales": [
@@ -93,6 +96,37 @@
                     },
                     "strokeWidth": {
                         "value": 2
+                    }
+                }
+            }
+        },
+        {
+            "type": "symbol",
+            "from": {
+                "data": "highlightedPoint"
+            },
+            "interactive": false,
+            "encode": {
+                "enter": {
+                    "x": {
+                        "scale": "xscale",
+                        "field": "category"
+                    },
+                    "y": {
+                        "scale": "yscale",
+                        "field": "amount"
+                    },
+                    "fill": {
+                        "value": "#fa7f9f"
+                    },
+                    "stroke": {
+                        "value": "#891836"
+                    },
+                    "strokeWidth": {
+                        "value": 1
+                    },
+                    "size": {
+                        "value": 64
                     }
                 }
             }
