@@ -26,9 +26,6 @@ fetchJSON('./assets/data/vega1.vg.json')
     .run();
 })
 .then(() => {
-    // console.log(view1);
-    // console.log(view2);
-
     view1.addSignalListener('tooltip', (name, data) => {
         if (R.isNil(data.category) === false) {
             const i = R.findIndex(c => c === R.toUpper(data.category))(alphabet);
@@ -44,7 +41,13 @@ fetchJSON('./assets/data/vega1.vg.json')
             )
             .run();
             highlightedPoint = newHighlightedPoint;
-            // console.log(data.category, i);
+        } else {
+            view2
+            .change('highlightedPoint',
+                vega.changeset()
+                .remove(highlightedPoint),
+            )
+            .run();
         }
     });
 });
