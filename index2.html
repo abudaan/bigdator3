@@ -1,0 +1,134 @@
+<!-- from: https://gist.github.com/timelyportfolio/a200e632235b02066f8f1a7c4c8dc37a -->
+
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <!--<script src="vega.min.js"></script>-->
+    <script src="/bigdator3/assets/js/vega.js"></script>
+</head>
+
+<body>
+    <div id="vis"></div>
+    <pre id="pre-hovered"></pre>
+    <script>
+        // spec from vega 3.0 examples
+        //  https://github.com/uwdata/vega/blob/master/test/spec/bar-hover-label.vg.json
+        var spec = {
+            "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+            "width": 400,
+            "height": 200,
+            "padding": 5,
+
+            "signals": [
+                {
+                    "name": "blank",
+                    "value": { "x": 0, "y": 0 }
+                },
+                {
+                    "name": "label",
+                    "update": "blank",
+                    "on": [
+                        { "events": "rect:mouseover", "update": "datum" },
+                        { "events": "rect:mouseout", "update": "blank" }
+                    ]
+                }
+            ],
+
+            "data": [
+                {
+                    "name": "table",
+                    "values": [
+                        { "x": 1, "y": 28 }, { "x": 2, "y": 55 },
+                        { "x": 3, "y": 43 }, { "x": 4, "y": 91 },
+                        { "x": 5, "y": 81 }, { "x": 6, "y": 53 },
+                        { "x": 7, "y": 19 }, { "x": 8, "y": 87 },
+                        { "x": 9, "y": 52 }, { "x": 10, "y": 48 },
+                        { "x": 11, "y": 24 }, { "x": 12, "y": 49 },
+                        { "x": 13, "y": 87 }, { "x": 14, "y": 66 },
+                        { "x": 15, "y": 17 }, { "x": 16, "y": 27 },
+                        { "x": 17, "y": 68 }, { "x": 18, "y": 16 },
+                        { "x": 19, "y": 49 }, { "x": 20, "y": 15 }
+                    ]
+                }
+            ],
+
+            "scales": [
+                {
+                    "name": "xscale",
+                    "type": "band",
+                    "range": "width",
+                    "domain": { "data": "table", "field": "x" }
+                },
+                {
+                    "name": "yscale",
+                    "type": "linear",
+                    "range": "height",
+                    "domain": { "data": "table", "field": "y" },
+                    "nice": true
+                }
+            ],
+
+            "axes": [
+                { "orient": "bottom", "scale": "xscale" },
+                { "orient": "left", "scale": "yscale" }
+            ],
+
+            "marks": [
+                {
+                    "type": "rect",
+                    "from": { "data": "table" },
+                    "encode": {
+                        "enter": {
+                            "x": { "scale": "xscale", "field": "x", "offset": 1 },
+                            "width": { "scale": "xscale", "band": 1, "offset": -1 },
+                            "y": { "scale": "yscale", "field": "y" },
+                            "y2": { "scale": "yscale", "value": 0 }
+                        },
+                        "update": {
+                            "fill": [
+                                { "test": "datum === label", "value": "red" },
+                                { "value": "steelblue" }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "text",
+                    "encode": {
+                        "enter": {
+                            "align": { "value": "center" },
+                            "fill": { "value": "#333" }
+                        },
+                        "update": {
+                            "x": { "scale": "xscale", "signal": "label.x", "band": 0.5 },
+                            "y": { "scale": "yscale", "signal": "label.y", "offset": -5 },
+                            "text": { "signal": "label.y" },
+                            "fillOpacity": [
+                                { "test": "label === blank", "value": 0 },
+                                { "value": 1 }
+                            ]
+                        }
+                    }
+                }
+            ]
+        };
+
+        var runtime = vega.parse(spec); // may throw an Error if parsing fails
+        var view = new vega.View(runtime)
+            .logLevel(vega.Warn) // set view logging level
+            .initialize(document.querySelector("#vis")) // set parent DOM element
+            .renderer("svg") // set render type (defaults to canvas)
+            .hover() // enable hover event processing
+            .run(); // update and render the view
+
+        // add a function to the dataflow to update pre with the hovered value
+        var hoverfollower = view.add(function () {
+            d3.select("#pre-hovered").text(JSON.stringify(view._signals.label.value));
+        }
+        );
+        // react to the label event stream
+        view.on(view._signals.label, hoverfollower);
+    </script>
+</body>

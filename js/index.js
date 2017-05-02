@@ -27,12 +27,14 @@ fetchJSON('./assets/data/vega1.vg.json')
 })
 .then(() => {
     view1.addSignalListener('tooltip', (name, data) => {
+        console.log('aaap', data);
         if (R.isNil(data.category) === false) {
             const i = R.findIndex(c => c === R.toUpper(data.category))(alphabet);
             const newHighlightedPoint = {
                 category: i + 1,
                 amount: data.amount,
             };
+            console.log(newHighlightedPoint);
             view2
             .change('highlightedPoint',
                 vega.changeset()
@@ -41,6 +43,8 @@ fetchJSON('./assets/data/vega1.vg.json')
             )
             .run();
             highlightedPoint = newHighlightedPoint;
+            // console.log(view1.getState().signals.tooltip);
+            view2.signal('tooltip', newHighlightedPoint).run();
         } else {
             view2
             .change('highlightedPoint',
@@ -48,7 +52,23 @@ fetchJSON('./assets/data/vega1.vg.json')
                 .remove(highlightedPoint),
             )
             .run();
+            view2.signal('tooltip', highlightedPoint).run();
         }
     });
+    // view1.signal('tooltip', []).run();
+    // console.log(view1);
+    view2.signal('tooltip', view1.data('table')[2]).run();
+    // const p = view2.signal('height', 14).run();
+    // console.log(p);
+    // const state = view1.getState();
+    // console.log(state);
+    // view1.setState({
+    //     ...state,
+    //     signals: {
+    //         ...state.signals,
+    //         tooltip: [{ category: 'B', amount: 55, _id: 3 }],
+    //     },
+    // })
+    // .run();
 });
 

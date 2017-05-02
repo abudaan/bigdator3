@@ -48,11 +48,11 @@
       "value": {},
       "on": [
         {
-          "events": "rect:mouseover",
+          "events": [{"marktype": "rect", "type": "mouseover"}],
           "update": "datum"
         },
         {
-          "events": "rect:mouseout",
+          "events": [{"marktype": "rect", "type": "mouseout"}],
           "update": "{}"
         }
       ]

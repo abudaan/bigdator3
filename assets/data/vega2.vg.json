@@ -75,6 +75,12 @@
             "scale": "yscale"
         }
     ],
+    "signals": [
+        {
+            "name": "tooltip",
+            "value": {}
+        }
+    ],
     "marks": [
         {
             "type": "line",
@@ -98,7 +104,14 @@
                         "value": 2
                     }
                 }
-            }
+            },
+            "transform": [
+                {
+                    "type": "voronoi",
+                    "x": "x",
+                    "y": "y"
+                }
+            ]
         },
         {
             "type": "symbol",
@@ -127,6 +140,37 @@
                     },
                     "size": {
                         "value": 64
+                    }
+                }
+            }
+        },
+        {
+            "name": "test",
+            "type": "text",
+            "encode": {
+                "enter": {
+                    "x": {
+                        "offset": 20
+                    },
+                    "y": {
+                        "offset": -30
+                    },
+                    "align": {
+                        "value": "center"
+                    },
+                    "baseline": {
+                        "value": "bottom"
+                    },
+                    "fill": {
+                        "value": "#333"
+                    },
+                    "text": {
+                        "value": "aap"
+                    }
+                },
+                "update": {
+                    "text": {
+                        "signal": "tooltip.category + ' | ' + tooltip.amount"
                     }
                 }
             }
