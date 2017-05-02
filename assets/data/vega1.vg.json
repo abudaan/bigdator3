@@ -40,19 +40,47 @@
           "amount": 87
         }
       ]
+    },
+    {
+      "name": "highlight",
+      "values": []
     }
   ],
   "signals": [
+    {
+      "name": "external",
+      "value": {},
+      "on": [
+        {
+          "events": [
+            {
+              "signal": "tooltip"
+            }
+          ],
+          "update": "{'category': tooltip.category, 'amount': tooltip.amount, '_id': tooltip._id}"
+        }
+      ]
+    },
     {
       "name": "tooltip",
       "value": {},
       "on": [
         {
-          "events": [{"marktype": "rect", "type": "mouseover"}],
+          "events": [
+            {
+              "markname": "bar",
+              "type": "mouseover"
+            }
+          ],
           "update": "datum"
         },
         {
-          "events": [{"marktype": "rect", "type": "mouseout"}],
+          "events": [
+            {
+              "markname": "bar",
+              "type": "mouseout"
+            }
+          ],
           "update": "{}"
         }
       ]
@@ -90,10 +118,49 @@
   ],
   "marks": [
     {
+      "name": "feedback",
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {
+            "offset": 20
+          },
+          "y": {
+            "offset": -30
+          },
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "bottom"
+          },
+          "fill": {
+            "value": "#333"
+          },
+          "text": {
+            "value": ""
+          }
+        },
+        "update": {
+          "text": {
+            "signal": "tooltip.amount ? (tooltip.category + ' ' + tooltip.amount) : ''"
+          }
+        }
+      }
+    },
+    {
       "type": "rect",
+      "name": "bar",
       "from": {
         "data": "table"
       },
+      "on": [
+        {
+          "trigger": "tooltip",
+          "modify": "tooltip",
+          "values": ""
+        }
+      ],
       "encode": {
         "enter": {
           "x": {
@@ -116,14 +183,15 @@
           }
         },
         "update": {
-          "fill": {
-            "value": "steelblue"
-          }
-        },
-        "hover": {
-          "fill": {
-            "value": "red"
-          }
+          "fill": [
+            {
+              "test": "datum === tooltip",
+              "value": "red"
+            },
+            {
+              "value": "steelblue"
+            }
+          ]
         }
       }
     },
@@ -154,16 +222,7 @@
           },
           "text": {
             "signal": "tooltip.amount"
-          },
-          "fillOpacity": [
-            {
-              "test": "datum === tooltip",
-              "value": 0
-            },
-            {
-              "value": 1
-            }
-          ]
+          }
         }
       }
     }

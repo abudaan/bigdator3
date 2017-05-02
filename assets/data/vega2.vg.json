@@ -5,44 +5,41 @@
     "padding": 5,
     "data": [
         {
-            "name": "points",
+            "name": "table",
             "values": [
                 {
-                    "category": 1,
+                    "category": "A",
                     "amount": 28
                 },
                 {
-                    "category": 2,
+                    "category": "B",
                     "amount": 55
                 },
                 {
-                    "category": 3,
+                    "category": "C",
                     "amount": 43
                 },
                 {
-                    "category": 4,
+                    "category": "D",
                     "amount": 91
                 },
                 {
-                    "category": 5,
+                    "category": "E",
                     "amount": 81
                 },
                 {
-                    "category": 6,
+                    "category": "F",
                     "amount": 53
                 },
                 {
-                    "category": 7,
+                    "category": "G",
                     "amount": 19
                 },
                 {
-                    "category": 8,
+                    "category": "H",
                     "amount": 87
                 }
             ]
-        },
-        {
-            "name": "highlightedPoint"
         }
     ],
     "scales": [
@@ -50,7 +47,7 @@
             "name": "xscale",
             "type": "band",
             "domain": {
-                "data": "points",
+                "data": "table",
                 "field": "category"
             },
             "range": "width"
@@ -58,7 +55,7 @@
         {
             "name": "yscale",
             "domain": {
-                "data": "points",
+                "data": "table",
                 "field": "amount"
             },
             "nice": true,
@@ -78,20 +75,37 @@
     "signals": [
         {
             "name": "tooltip",
-            "value": {}
+            "value": {},
+            "on": [
+                {
+                    "events": {
+                        "type": "mouseover",
+                        "markname": "point"
+                    },
+                    "update": "datum"
+                },
+                {
+                    "events": {
+                        "type": "mouseout",
+                        "markname": "point"
+                    },
+                    "update": "{}"
+                }
+            ]
         }
     ],
     "marks": [
         {
             "type": "line",
             "from": {
-                "data": "points"
+                "data": "table"
             },
             "encode": {
                 "enter": {
                     "x": {
                         "scale": "xscale",
-                        "field": "category"
+                        "field": "category",
+                        "band": 0.5
                     },
                     "y": {
                         "scale": "yscale",
@@ -104,48 +118,10 @@
                         "value": 2
                     }
                 }
-            },
-            "transform": [
-                {
-                    "type": "voronoi",
-                    "x": "x",
-                    "y": "y"
-                }
-            ]
-        },
-        {
-            "type": "symbol",
-            "from": {
-                "data": "highlightedPoint"
-            },
-            "interactive": false,
-            "encode": {
-                "enter": {
-                    "x": {
-                        "scale": "xscale",
-                        "field": "category"
-                    },
-                    "y": {
-                        "scale": "yscale",
-                        "field": "amount"
-                    },
-                    "fill": {
-                        "value": "#fa7f9f"
-                    },
-                    "stroke": {
-                        "value": "#891836"
-                    },
-                    "strokeWidth": {
-                        "value": 1
-                    },
-                    "size": {
-                        "value": 64
-                    }
-                }
             }
         },
         {
-            "name": "test",
+            "name": "feedback",
             "type": "text",
             "encode": {
                 "enter": {
@@ -165,13 +141,65 @@
                         "value": "#333"
                     },
                     "text": {
-                        "value": "aap"
+                        "value": ""
                     }
                 },
                 "update": {
                     "text": {
-                        "signal": "tooltip.category + ' | ' + tooltip.amount"
+                        "signal": "tooltip.amount ? (tooltip.category + ' ' + tooltip.amount) : ''"
                     }
+                }
+            }
+        },
+        {
+            "type": "symbol",
+            "name": "point",
+            "from": {
+                "data": "table"
+            },
+            "encode": {
+                "enter": {
+                    "x": {
+                        "scale": "xscale",
+                        "field": "category",
+                        "band": 0.5
+                    },
+                    "y": {
+                        "scale": "yscale",
+                        "field": "amount"
+                    },
+                    "fill": {
+                        "value": "steelblue"
+                    },
+                    "stroke": {
+                        "value": "white"
+                    },
+                    "strokeWidth": {
+                        "value": 1
+                    },
+                    "size": {
+                        "value": 64
+                    }
+                },
+                "update": {
+                    "fill": [
+                        {
+                            "test": "datum === tooltip",
+                            "value": "red"
+                        },
+                        {
+                            "value": "steelblue"
+                        }
+                    ],
+                    "size": [
+                        {
+                            "test": "datum === tooltip",
+                            "value": 100
+                        },
+                        {
+                            "value": 64
+                        }
+                    ]
                 }
             }
         }
