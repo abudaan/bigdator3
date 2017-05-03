@@ -5,8 +5,6 @@ import { fetchJSON } from './util/fetch_helpers';
 const vega = global.vega; // coding like it's 1999
 let view1;
 let view2;
-// const elementView1 = document.getElementById('view1');
-// const elementView2 = document.getElementById('view2');
 const now = Date.now();
 
 const signalListenerView1 = (name, data) => {
@@ -46,12 +44,4 @@ fetchJSON(`./assets/data/vega1.vg.json?${now}`)
 
     view1.addSignalListener('tooltip', signalListenerView2);
     view2.addSignalListener('tooltip', signalListenerView1);
-    // elementView2.addEventListener('mouseenter', () => {
-    //     console.log('enter');
-    //     view2.addSignalListener('tooltip', signalListenerView1);
-    // });
-    // elementView2.addEventListener('mouseleave', () => {
-    //     console.log('leave');
-    //     view2.removeSignalListener('tooltip', signalListenerView1);
-    // });
 });

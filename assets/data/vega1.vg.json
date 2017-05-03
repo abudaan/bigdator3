@@ -10,28 +10,14 @@
   ],
   "signals": [
     {
-      "name": "highlight",
-      "value": {},
-      "on": [
-        {
-          "events": [
-            {
-              "signal": "tooltip"
-            }
-          ],
-          "update": "{'category': tooltip.category, 'amount': tooltip.amount}"
-        }
-      ]
-    },
-    {
       "name": "tooltip",
       "value": {},
       "on": [
         {
           "events": [
             {
-              "markname": "bar",
-              "type": "mouseover"
+              "type": "mouseover",
+              "markname": "bar"
             }
           ],
           "update": "datum"
@@ -39,8 +25,8 @@
         {
           "events": [
             {
-              "markname": "bar",
-              "type": "mouseout"
+              "type": "mouseout",
+              "markname": "bar"
             }
           ],
           "update": "{}"
@@ -175,37 +161,17 @@
             "scale": "yscale",
             "value": 0
           }
-        }
-      }
-    },
-    {
-      "type": "rect",
-      "name": "highlight",
-      "interactive": false,
-      "zindex": 100,
-      "encode": {
-        "enter": {},
+        },
         "update": {
-          "fill": {
-            "value": "orange"
-          },
-          "x": {
-            "scale": "xscale",
-            "signal": "highlight.category",
-            "offset": 1
-          },
-          "width": {
-            "scale": "xscale",
-            "band": 1
-          },
-          "y": {
-            "scale": "yscale",
-            "signal": "highlight.amount"
-          },
-          "y2": {
-            "scale": "yscale",
-            "value": 0
-          }
+          "fill": [
+            {
+              "test": "datum === tooltip",
+              "value": "orange"
+            },
+            {
+              "value": "steelblue"
+            }
+          ]
         }
       }
     },
