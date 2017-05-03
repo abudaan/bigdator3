@@ -20,7 +20,6 @@ fetchJSON(`./assets/data/vega1.vg.json?${now}`)
     view1 = new vega.View(vega.parse(data))
     .renderer('svg')
     // .logLevel(vega.Debug)
-    // .hover()
     .initialize('#view1');
 })
 .then(() => fetchJSON(`./assets/data/vega2.vg.json?${now}`))
@@ -28,7 +27,6 @@ fetchJSON(`./assets/data/vega1.vg.json?${now}`)
     view2 = new vega.View(vega.parse(data))
     .renderer('svg')
     // .logLevel(vega.Debug)
-    // .hover()
     .initialize('#view2');
 })
 .then(() => fetchJSON(`./assets/data/data.json?${now}`))
@@ -44,4 +42,18 @@ fetchJSON(`./assets/data/vega1.vg.json?${now}`)
 
     view1.addSignalListener('tooltip', signalListenerView2);
     view2.addSignalListener('tooltip', signalListenerView1);
+
+    view1.addSignalListener('changeAmount', (name, d) => {
+        view1.change('table',
+            vega.changeset()
+            .insert(d)
+            .remove(datum => datum.category === d.category),
+        ).run();
+
+        view2.change('table',
+            vega.changeset()
+            .insert(d)
+            .remove(datum => datum.category === d.category),
+        ).run();
+    });
 });

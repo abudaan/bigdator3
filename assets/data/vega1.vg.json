@@ -10,6 +10,16 @@
   ],
   "signals": [
     {
+      "name": "changeAmount",
+      "value": {},
+      "on": [
+        {
+          "events": "click[!event.shiftKey], mousemove[event.buttons && !event.shiftKey]{20}",
+          "update": "{amount: round(invert('yscale', y())), category: datum.category}"
+        }
+      ]
+    },
+    {
       "name": "tooltip",
       "value": {},
       "on": [
@@ -135,6 +145,37 @@
     }
   ],
   "marks": [
+    {
+      "name": "feedback",
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {
+            "offset": 20
+          },
+          "y": {
+            "offset": -30
+          },
+          "align": {
+            "value": "center"
+          },
+          "baseline": {
+            "value": "bottom"
+          },
+          "fill": {
+            "value": "#fff"
+          },
+          "text": {
+            "value": ""
+          }
+        },
+        "update": {
+          "text": {
+            "signal": "changeAmount.category  + ' - ' + changeAmount.amount"
+          }
+        }
+      }
+    },
     {
       "type": "rect",
       "name": "bar",
