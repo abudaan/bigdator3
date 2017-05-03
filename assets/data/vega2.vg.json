@@ -14,7 +14,11 @@
             "type": "band",
             "domain": {
                 "data": "table",
-                "field": "category"
+                "field": "category",
+                "sort": {
+                    "field": "x",
+                    "op": "min"
+                }
             },
             "range": "width"
         },
@@ -46,7 +50,7 @@
                             "value": "white"
                         },
                         "angle": {
-                            "value": -45
+                            "value": 0
                         },
                         "align": {
                             "value": "left"
@@ -85,7 +89,7 @@
                             "value": "white"
                         },
                         "angle": {
-                            "value": -45
+                            "value": 0
                         },
                         "align": {
                             "value": "left"
@@ -109,6 +113,39 @@
         }
     ],
     "signals": [
+        {
+            "name": "selectedCategory",
+            "value": "null",
+            "on": [
+                {
+                    "events": [
+                        {
+                            "type": "mousedown",
+                            "markname": "point"
+                        }
+                    ],
+                    "update": "datum.category"
+                },
+                {
+                    "events": [
+                        {
+                            "type": "mouseup"
+                        }
+                    ],
+                    "update": "null"
+                }
+            ]
+        },
+        {
+            "name": "changeAmount",
+            "value": {},
+            "on": [
+                {
+                    "events": "click[!event.shiftKey], mousemove[event.buttons && !event.shiftKey]{20}",
+                    "update": "selectedCategory === 'null' ? {} : {amount: round(invert('yscale', y())), category: selectedCategory}"
+                }
+            ]
+        },
         {
             "name": "tooltip",
             "value": {},
@@ -153,12 +190,30 @@
                     "strokeWidth": {
                         "value": 2
                     }
+                },
+                "update": {
+                    "x": {
+                        "scale": "xscale",
+                        "field": "category",
+                        "band": 0.5
+                    },
+                    "y": {
+                        "scale": "yscale",
+                        "field": "amount"
+                    },
+                    "stroke": {
+                        "value": "#5357a1"
+                    },
+                    "strokeWidth": {
+                        "value": 2
+                    }
                 }
             }
         },
         {
             "name": "feedback",
             "type": "text",
+            "zindex": 3,
             "encode": {
                 "enter": {
                     "x": {
@@ -220,7 +275,7 @@
                 "update": {
                     "fill": [
                         {
-                            "test": "datum === tooltip",
+                            "test": "datum === tooltip || datum.category === selectedCategory",
                             "value": "orange"
                         },
                         {

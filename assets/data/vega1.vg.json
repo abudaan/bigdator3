@@ -10,12 +10,35 @@
   ],
   "signals": [
     {
+      "name": "selectedCategory",
+      "value": false,
+      "on": [
+        {
+          "events": [
+            {
+              "type": "mousedown",
+              "markname": "bar"
+            }
+          ],
+          "update": "datum.category"
+        },
+        {
+          "events": [
+            {
+              "type": "mouseup"
+            }
+          ],
+          "update": "null"
+        }
+      ]
+    },
+    {
       "name": "changeAmount",
       "value": {},
       "on": [
         {
           "events": "click[!event.shiftKey], mousemove[event.buttons && !event.shiftKey]{20}",
-          "update": "{amount: round(invert('yscale', y())), category: datum.category}"
+          "update": "selectedCategory === 'null' ? {} : {amount: round(invert('yscale', y())), category: selectedCategory}"
         }
       ]
     },
@@ -50,7 +73,11 @@
       "type": "band",
       "domain": {
         "data": "table",
-        "field": "category"
+        "field": "category",
+        "sort": {
+          "field": "x",
+          "op": "min"
+        }
       },
       "range": "width"
     },
@@ -148,6 +175,7 @@
     {
       "name": "feedback",
       "type": "text",
+      "zindex": 3,
       "encode": {
         "enter": {
           "x": {
@@ -171,7 +199,7 @@
         },
         "update": {
           "text": {
-            "signal": "changeAmount.category  + ' - ' + changeAmount.amount"
+            "signal": "(!selectedCategory ? '' : selectedCategory) + ' ' + (!changeAmount.amount ? '' : changeAmount.amount)"
           }
         }
       }
@@ -206,7 +234,7 @@
         "update": {
           "fill": [
             {
-              "test": "datum === tooltip",
+              "test": "datum === tooltip || datum.category === selectedCategory",
               "value": "orange"
             },
             {
@@ -227,7 +255,7 @@
             "value": "bottom"
           },
           "fill": {
-            "value": "#333"
+            "value": "#fff"
           }
         },
         "update": {
