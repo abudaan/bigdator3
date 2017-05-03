@@ -5,50 +5,12 @@
   "padding": 5,
   "data": [
     {
-      "name": "table",
-      "values": [
-        {
-          "category": "A",
-          "amount": 28
-        },
-        {
-          "category": "B",
-          "amount": 55
-        },
-        {
-          "category": "C",
-          "amount": 43
-        },
-        {
-          "category": "D",
-          "amount": 91
-        },
-        {
-          "category": "E",
-          "amount": 81
-        },
-        {
-          "category": "F",
-          "amount": 53
-        },
-        {
-          "category": "G",
-          "amount": 19
-        },
-        {
-          "category": "H",
-          "amount": 87
-        }
-      ]
-    },
-    {
-      "name": "highlight",
-      "values": []
+      "name": "table"
     }
   ],
   "signals": [
     {
-      "name": "external",
+      "name": "highlight",
       "value": {},
       "on": [
         {
@@ -57,7 +19,7 @@
               "signal": "tooltip"
             }
           ],
-          "update": "{'category': tooltip.category, 'amount': tooltip.amount, '_id': tooltip._id}"
+          "update": "{'category': tooltip.category, 'amount': tooltip.amount}"
         }
       ]
     },
@@ -109,58 +71,90 @@
   "axes": [
     {
       "orient": "bottom",
-      "scale": "xscale"
-    },
-    {
-      "orient": "left",
-      "scale": "yscale"
-    }
-  ],
-  "marks": [
-    {
-      "name": "feedback",
-      "type": "text",
+      "scale": "xscale",
       "encode": {
-        "enter": {
-          "x": {
-            "offset": 20
-          },
-          "y": {
-            "offset": -30
-          },
-          "align": {
-            "value": "center"
-          },
-          "baseline": {
-            "value": "bottom"
-          },
-          "fill": {
-            "value": "#333"
-          },
-          "text": {
-            "value": ""
+        "ticks": {
+          "enter": {
+            "stroke": {
+              "value": "white"
+            }
           }
         },
-        "update": {
-          "text": {
-            "signal": "tooltip.amount ? (tooltip.category + ' ' + tooltip.amount) : ''"
+        "labels": {
+          "enter": {
+            "fill": {
+              "value": "white"
+            },
+            "angle": {
+              "value": 0
+            },
+            "align": {
+              "value": "left"
+            },
+            "baseline": {
+              "value": "middle"
+            },
+            "dx": {
+              "value": 3
+            }
+          }
+        },
+        "domain": {
+          "enter": {
+            "stroke": {
+              "value": "#fff"
+            }
           }
         }
       }
     },
+    {
+      "orient": "left",
+      "scale": "yscale",
+      "encode": {
+        "ticks": {
+          "enter": {
+            "stroke": {
+              "value": "white"
+            }
+          }
+        },
+        "labels": {
+          "enter": {
+            "fill": {
+              "value": "white"
+            },
+            "angle": {
+              "value": 0
+            },
+            "align": {
+              "value": "left"
+            },
+            "baseline": {
+              "value": "middle"
+            },
+            "dx": {
+              "value": 3
+            }
+          }
+        },
+        "domain": {
+          "enter": {
+            "stroke": {
+              "value": "#fff"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "marks": [
     {
       "type": "rect",
       "name": "bar",
       "from": {
         "data": "table"
       },
-      "on": [
-        {
-          "trigger": "tooltip",
-          "modify": "tooltip",
-          "values": ""
-        }
-      ],
       "encode": {
         "enter": {
           "x": {
@@ -181,17 +175,37 @@
             "scale": "yscale",
             "value": 0
           }
-        },
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "name": "highlight",
+      "interactive": false,
+      "zindex": 100,
+      "encode": {
+        "enter": {},
         "update": {
-          "fill": [
-            {
-              "test": "datum === tooltip",
-              "value": "red"
-            },
-            {
-              "value": "steelblue"
-            }
-          ]
+          "fill": {
+            "value": "orange"
+          },
+          "x": {
+            "scale": "xscale",
+            "signal": "highlight.category",
+            "offset": 1
+          },
+          "width": {
+            "scale": "xscale",
+            "band": 1
+          },
+          "y": {
+            "scale": "yscale",
+            "signal": "highlight.amount"
+          },
+          "y2": {
+            "scale": "yscale",
+            "value": 0
+          }
         }
       }
     },
