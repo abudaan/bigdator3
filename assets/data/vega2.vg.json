@@ -3,9 +3,23 @@
     "width": 400,
     "height": 200,
     "padding": 5,
+    "config": {
+        "axis": {
+            "grid": true,
+            "gridColor": "#555",
+            "opacity": 0.5
+        }
+    },
     "data": [
         {
-            "name": "table"
+            "name": "table",
+            "on": [
+                {
+                    "trigger": "changeAmount",
+                    "modify": "changeAmount.datum",
+                    "values": "{category: changeAmount.datum.category, amount: changeAmount.amount}"
+                }
+            ]
         }
     ],
     "scales": [
@@ -114,8 +128,19 @@
     ],
     "signals": [
         {
+            "name": "dataUpdate",
+            "on": [
+                {
+                    "events": {
+                        "signal": "changeAmount"
+                    },
+                    "update": "{name: 'table', values: data('table')}"
+                }
+            ]
+        },
+        {
             "name": "selectedCategory",
-            "value": "null",
+            "value": {},
             "on": [
                 {
                     "events": [
@@ -124,7 +149,7 @@
                             "markname": "point"
                         }
                     ],
-                    "update": "datum.category"
+                    "update": "datum"
                 },
                 {
                     "events": [
@@ -132,17 +157,19 @@
                             "type": "mouseup"
                         }
                     ],
-                    "update": "null"
+                    "update": "{}"
                 }
             ]
         },
         {
             "name": "changeAmount",
-            "value": {},
+            "value": {
+                "datum": {}
+            },
             "on": [
                 {
-                    "events": "click[!event.shiftKey], mousemove[event.buttons && !event.shiftKey]{20}",
-                    "update": "selectedCategory === 'null' ? {} : {amount: round(invert('yscale', y())), category: selectedCategory}"
+                    "events": "click, mousemove[event.buttons]{20}",
+                    "update": "{amount: round(invert('yscale', y())), datum: selectedCategory}"
                 }
             ]
         },
@@ -273,6 +300,15 @@
                     }
                 },
                 "update": {
+                    "x": {
+                        "scale": "xscale",
+                        "field": "category",
+                        "band": 0.5
+                    },
+                    "y": {
+                        "scale": "yscale",
+                        "field": "amount"
+                    },
                     "fill": [
                         {
                             "test": "datum === tooltip || datum.category === selectedCategory",

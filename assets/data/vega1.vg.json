@@ -20,7 +20,9 @@
       "name": "dataUpdate",
       "on": [
         {
-          "events": {"signal": "changeAmount"},
+          "events": {
+            "signal": "changeAmount"
+          },
           "update": "{name: 'table', values: data('table')}"
         }
       ]
@@ -55,7 +57,7 @@
       },
       "on": [
         {
-          "events": "click[!event.shiftKey], mousemove[event.buttons && !event.shiftKey]{20}",
+          "events": "click, mousemove[event.buttons]{20}",
           "update": "{amount: round(invert('yscale', y())), datum: selectedCategory}"
         }
       ]
@@ -217,7 +219,7 @@
         },
         "update": {
           "text": {
-            "signal": "changeAmount.amount ? changeAmount.amount : '' + ' ' + selectedCategory.category ? selectedCategory.category : ''"
+            "signal": "changeAmount + ' ' + selectedCategory ? selectedCategory.category : ''"
           }
         }
       }
