@@ -1,0 +1,32 @@
+baseurl: './assets/data/'
+data: 'data.json' # file containing the dataset that is used in all specs
+specs: [{
+    url: 'view1.vg.json'
+    name: 'view1'
+    # The bind array maps signals of other specs onto this spec
+    # note: the names of the signals have to be the same in both
+    # specs. This can be an annoying limitation so it might change
+    # in later versions
+    bind: [
+        name: 'view2'
+        signals: [
+            'tooltip'
+            'selectedCategory'
+            'dataUpdate'
+        ]
+    ]
+    }
+
+    {
+    url: 'view2.vg.json'
+    name: 'view2'
+    bind: [
+        name: 'view1'
+        signals: [
+            'tooltip'
+            'selectedCategory'
+            'dataUpdate'
+        ]
+    ]
+    }
+]

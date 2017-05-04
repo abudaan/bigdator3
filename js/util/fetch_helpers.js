@@ -1,5 +1,6 @@
 // fetch helpers
 import fetch from 'isomorphic-fetch';
+import CSON from 'cson-parser';
 
 export function status(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -10,6 +11,11 @@ export function status(response) {
 
 export function json(response) {
     return response.json();
+}
+
+export function cson(response) {
+    return response.text()
+    .then(data => Promise.resolve(CSON.parse(data)));
 }
 
 export function arrayBuffer(response) {
@@ -25,6 +31,23 @@ export function fetchJSON(url) {
         fetch(url)
             .then(status)
             .then(json)
+            .then((data) => {
+                resolve(data);
+            })
+            .catch((e) => {
+                reject(e);
+            });
+    });
+}
+
+export function fetchCSON(url) {
+    return new Promise((resolve, reject) => {
+        // fetch(url, {
+        //   mode: 'no-cors'
+        // })
+        fetch(url)
+            .then(status)
+            .then(cson)
             .then((data) => {
                 resolve(data);
             })
