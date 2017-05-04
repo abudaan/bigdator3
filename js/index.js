@@ -1,20 +1,23 @@
 import 'babel-polyfill';
 import R from 'ramda';
 import { fetchJSON } from './util/fetch_helpers';
+import bindings from '../assets/data/bindings';
 
 const vega = global.vega; // coding like it's 1999
 let view1;
 let view2;
-const now = Date.now();
 
-fetchJSON(`./assets/data/vega1.vg.json?${now}`)
+const now = Date.now();
+// @todo: load specs and data from bindings json
+
+fetchJSON(`./assets/data/view1.vg.json?${now}`)
     .then((data) => {
         view1 = new vega.View(vega.parse(data))
             .renderer('svg')
             // .logLevel(vega.Debug)
             .initialize('#view1');
     })
-    .then(() => fetchJSON(`./assets/data/vega2.vg.json?${now}`))
+    .then(() => fetchJSON(`./assets/data/view2.vg.json?${now}`))
     .then((data) => {
         view2 = new vega.View(vega.parse(data))
             .renderer('svg')
@@ -23,7 +26,6 @@ fetchJSON(`./assets/data/vega1.vg.json?${now}`)
     })
     .then(() => fetchJSON(`./assets/data/data.json?${now}`))
     .then((dataset) => {
-        // console.log(R.keys(view1.getState().signals));
         view1.change('table',
             vega.changeset()
                 .insert(dataset),
@@ -33,26 +35,34 @@ fetchJSON(`./assets/data/vega1.vg.json?${now}`)
                 .insert(dataset),
         ).run();
 
-        view1.addSignalListener('tooltip', (name, data) => {
-            view2.signal('tooltip', data).run();
-        });
-        view2.addSignalListener('tooltip', (name, data) => {
-            view1.signal('tooltip', data).run();
-        });
+        const viewMap = {
+            vega1: view1,
+            vega2: view2,
+        };
 
-        view1.addSignalListener('dataUpdate', (name, data) => {
-            view2.remove(data.name, () => true).run();
-            view2.insert(data.name, data.values).run();
-        });
-        view2.addSignalListener('dataUpdate', (name, data) => {
-            view1.remove(data.name, () => true).run();
-            view1.insert(data.name, data.values).run();
-        });
-
-        view1.addSignalListener('selectedCategory', (name, category) => {
-            view2.signal('selectedCategory', category).run();
-        });
-        view2.addSignalListener('selectedCategory', (name, category) => {
-            view1.signal('selectedCategory', category).run();
-        });
+        R.forEach((spec) => {
+            const listener = viewMap[spec.name];
+            const listenerSignals = R.keys(listener.getState().signals);
+            // console.log('listener', listenerSignals);
+            R.forEach((b) => {
+                const emitter = viewMap[b.name];
+                const emitterSignals = R.keys(emitter.getState().signals);
+                // console.log('emitter', emitterSignals);
+                R.forEach((signal) => {
+                    if (R.findIndex(s => signal === s)(emitterSignals) !== -1 &&
+                        R.findIndex(s => signal === s)(listenerSignals) !== -1) {
+                        if (signal === 'dataUpdate') {
+                            emitter.addSignalListener(signal, (name, data) => {
+                                listener.remove(data.name, () => true).run();
+                                listener.insert(data.name, data.values).run();
+                            });
+                        } else {
+                            emitter.addSignalListener(signal, (name, data) => {
+                                listener.signal(name, data).run();
+                            });
+                        }
+                    }
+                }, b.signals);
+            }, spec.bind);
+        }, bindings.specs);
     });
