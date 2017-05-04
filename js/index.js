@@ -10,7 +10,7 @@ const mapIndexed = R.addIndex(R.map);
 
 // Get the application config; this yaml file describes the vega specs that are used
 // and how the signals of each of these specs are mapped onto one and eachother.
-fetchYAML('./assets/data/config.yaml')
+fetchYAML(`./assets/data/config.yaml?${now}`)
     .then((config) => {
         const baseUrl: string = config.baseurl;
         // First load the file containing the dataset that is used in all specs.
