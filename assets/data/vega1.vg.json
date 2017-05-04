@@ -5,13 +5,29 @@
   "padding": 5,
   "data": [
     {
-      "name": "table"
+      "name": "table",
+      "on": [
+        {
+          "trigger": "changeAmount",
+          "modify": "changeAmount.datum",
+          "values": "{category: changeAmount.datum.category, amount: changeAmount.amount}"
+        }
+      ]
     }
   ],
   "signals": [
     {
+      "name": "dataUpdate",
+      "on": [
+        {
+          "events": {"signal": "changeAmount"},
+          "update": "{name: 'table', values: data('table')}"
+        }
+      ]
+    },
+    {
       "name": "selectedCategory",
-      "value": false,
+      "value": {},
       "on": [
         {
           "events": [
@@ -20,7 +36,7 @@
               "markname": "bar"
             }
           ],
-          "update": "datum.category"
+          "update": "datum"
         },
         {
           "events": [
@@ -28,17 +44,19 @@
               "type": "mouseup"
             }
           ],
-          "update": "null"
+          "update": "{}"
         }
       ]
     },
     {
       "name": "changeAmount",
-      "value": {},
+      "value": {
+        "datum": {}
+      },
       "on": [
         {
           "events": "click[!event.shiftKey], mousemove[event.buttons && !event.shiftKey]{20}",
-          "update": "selectedCategory === 'null' ? {} : {amount: round(invert('yscale', y())), category: selectedCategory}"
+          "update": "{amount: round(invert('yscale', y())), datum: selectedCategory}"
         }
       ]
     },
@@ -199,7 +217,7 @@
         },
         "update": {
           "text": {
-            "signal": "(!selectedCategory ? '' : selectedCategory) + ' ' + (!changeAmount.amount ? '' : changeAmount.amount)"
+            "signal": "changeAmount.amount ? changeAmount.amount : '' + ' ' + selectedCategory.category ? selectedCategory.category : ''"
           }
         }
       }
@@ -232,9 +250,27 @@
           }
         },
         "update": {
+          "x": {
+            "scale": "xscale",
+            "field": "category",
+            "offset": 1
+          },
+          "width": {
+            "scale": "xscale",
+            "band": 1,
+            "offset": -1
+          },
+          "y": {
+            "scale": "yscale",
+            "field": "amount"
+          },
+          "y2": {
+            "scale": "yscale",
+            "value": 0
+          },
           "fill": [
             {
-              "test": "datum === tooltip || datum.category === selectedCategory",
+              "test": "datum === tooltip || datum === selectedCategory",
               "value": "orange"
             },
             {
