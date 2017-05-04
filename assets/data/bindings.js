@@ -1,4 +1,4 @@
-// not in use; this data is loaded over http as a cson file
+// not in use; this data is loaded over http as a cson of yaml file
 export default {
     baseurl: './assets/data/',
     data: 'data.json',

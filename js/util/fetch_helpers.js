@@ -1,6 +1,7 @@
 // fetch helpers
 import fetch from 'isomorphic-fetch';
 import CSON from 'cson-parser';
+import YAML from 'yamljs';
 
 export function status(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -16,6 +17,11 @@ export function json(response) {
 export function cson(response) {
     return response.text()
     .then(data => Promise.resolve(CSON.parse(data)));
+}
+
+export function yaml(response) {
+    return response.text()
+    .then(data => Promise.resolve(YAML.parse(data)));
 }
 
 export function arrayBuffer(response) {
@@ -48,6 +54,23 @@ export function fetchCSON(url) {
         fetch(url)
             .then(status)
             .then(cson)
+            .then((data) => {
+                resolve(data);
+            })
+            .catch((e) => {
+                reject(e);
+            });
+    });
+}
+
+export function fetchYAML(url) {
+    return new Promise((resolve, reject) => {
+        // fetch(url, {
+        //   mode: 'no-cors'
+        // })
+        fetch(url)
+            .then(status)
+            .then(yaml)
             .then((data) => {
                 resolve(data);
             })

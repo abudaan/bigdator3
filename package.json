@@ -82,6 +82,7 @@
     "redux-logger": "2.8.2",
     "redux-persist": "4.5.0",
     "reselect": "3.0.0",
-    "util": "0.10.3"
+    "util": "0.10.3",
+    "yamljs": "^0.2.10"
   }
 }

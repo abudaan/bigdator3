@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import R from 'ramda';
-import { fetchJSON, fetchCSON } from './util/fetch_helpers';
+import { fetchJSON, fetchYAML } from './util/fetch_helpers';
 
 const vega = global.vega; // coding like it's 1999
 const viewMap: { [id: string]: vega.View } = {};
@@ -8,15 +8,15 @@ const now: number = Date.now();
 const app: null | HTMLElement = document.getElementById('app');
 const mapIndexed = R.addIndex(R.map);
 
-// Get the application config; this files describes the vega specs that are used and
-// how the signals of each of these specs are mapped onto one and eachother.
-fetchCSON('./assets/data/config.cson')
+// Get the application config; this yaml file describes the vega specs that are used
+// and how the signals of each of these specs are mapped onto one and eachother.
+fetchYAML('./assets/data/config.yaml')
     .then((config) => {
         const baseUrl: string = config.baseurl;
         // First load the file containing the dataset that is used in all specs.
-        fetchJSON(`${baseUrl}${config.data}?${now}`)
+        fetchYAML(`${baseUrl}${config.data}?${now}`)
             .then((dataset) => {
-                // Load all specs in the config.cson file
+                // Load all specs in the config.yaml file
                 const promises: Promise<*>[] = R.map(spec => fetchJSON(`${baseUrl}${spec.url}?${now}`), config.specs);
                 Promise.all(promises)
                     .then((values) => {
@@ -38,7 +38,7 @@ fetchCSON('./assets/data/config.cson')
                         return Promise.resolve();
                     })
                     .then(() => {
-                        // Here we apply all mappings of signals described in the cson file. Before the listeners
+                        // Here we apply all mappings of signals described in the yaml file. Before the listeners
                         // are added we check if the sigals exist in both the emitter and the listeners
                         R.forEach((spec) => {
                             const listener = viewMap[spec.name];
