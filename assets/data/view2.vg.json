@@ -1,5 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+    "description": "points and line",
     "width": 400,
     "height": 200,
     "padding": 5,

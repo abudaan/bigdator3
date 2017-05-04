@@ -1,29 +1,29 @@
 export default {
-    baseurl: '/assets/data/',
+    baseurl: './assets/data/',
     data: 'data.json',
     specs: [
         {
-            url: 'vega1.vg.json',
-            name: 'vega1',
+            url: 'view1.vg.json',
+            name: 'view1',
             bind: [{
-                name: 'vega2',
+                name: 'view2',
                 signals: [
                     'tooltip',
-                 // 'selectedCategory',
+                    'selectedCategory',
                     'dataUpdate',
                 ],
             },
             ],
         },
         {
-            url: 'vega2.vg.json',
-            name: 'vega2',
+            url: 'view2.vg.json',
+            name: 'view2',
             bind: [{
-                name: 'vega1',
+                name: 'view1',
                 signals: [
-                // 'tooltip',
-                // 'selectedCategory',
-                // 'dataUpdate',
+                    'tooltip',
+                    'selectedCategory',
+                    'dataUpdate',
                 ],
             },
             ],
