@@ -32,7 +32,7 @@ const targets = {
 gulp.task('server', (done) => {
     connect.server({
         root: './',
-        port: 8333,
+        port: 5003,
     });
     done();
 });

@@ -4,6 +4,7 @@
   "description": "Communication between separate Vega3 views",
   "main": "index.js",
   "scripts": {
+    "start": "yarn gulp:develop",
     "gulp:develop": "NODE_ENV=develop ./node_modules/.bin/gulp develop"
   },
   "author": "abudaan",
