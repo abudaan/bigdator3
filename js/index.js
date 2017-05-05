@@ -8,15 +8,16 @@ const now: number = Date.now();
 const app: null | HTMLElement = document.getElementById('app');
 const mapIndexed = R.addIndex(R.map);
 
-// Get the application config; this yaml file describes the vega specs that are used
+// Step 1: Get the application config; this yaml file describes the vega specs that are used
 // and how the signals of each of these specs are mapped onto one and eachother.
 fetchYAML(`./assets/data/config.yaml?${now}`)
     .then((config) => {
+        console.log(config);
         const baseUrl: string = config.baseurl;
-        // First load the file containing the dataset that is used in all specs.
+        // Step 2: load the file containing the dataset that is used in all specs.
         fetchYAML(`${baseUrl}${config.data}?${now}`)
             .then((dataset) => {
-                // Load all specs in the config.yaml file
+                // Step 3: load all specs in the config.yaml file
                 const promises: Promise<*>[] = R.map(spec => fetchJSON(`${baseUrl}${spec.url}?${now}`), config.specs);
                 Promise.all(promises)
                     .then((values) => {
@@ -25,6 +26,7 @@ fetchYAML(`./assets/data/config.yaml?${now}`)
                             const elem: HTMLElement = document.createElement('div');
                             const name: string = config.specs[i].name;
                             elem.id = name;
+                            elem.className = 'view';
                             if (app !== null) {
                                 app.appendChild(elem);
                                 viewMap[name] = new vega.View(vega.parse(spec))
@@ -38,8 +40,9 @@ fetchYAML(`./assets/data/config.yaml?${now}`)
                         return Promise.resolve();
                     })
                     .then(() => {
-                        // Here we apply all mappings of signals described in the yaml file. Before the listeners
-                        // are added we check if the sigals exist in both the emitter and the listeners
+                        // Step 4: Here we apply all mappings of signals described in the yaml file.
+                        // Before the listeners are added we check if the sigals exist in both the
+                        // emitter and the listeners.
                         R.forEach((spec) => {
                             const listener = viewMap[spec.name];
                             const listenerSignals = R.keys(listener.getState().signals);
@@ -49,17 +52,24 @@ fetchYAML(`./assets/data/config.yaml?${now}`)
                                 const emitterSignals = R.keys(emitter.getState().signals);
                                 // console.log('emitter', emitterSignals);
                                 R.forEach((signal) => {
-                                    if (R.findIndex(s => signal === s)(emitterSignals) !== -1 &&
-                                        R.findIndex(s => signal === s)(listenerSignals) !== -1) {
+                                    let emitterSignal = signal;
+                                    let listenerSignal = signal;
+                                    if (R.isArrayLike(signal)) {
+                                        emitterSignal = signal[0];
+                                        listenerSignal = signal[1];
+                                    }
+                                    console.log(emitterSignal, listenerSignal);
+                                    if (R.findIndex(s => s === emitterSignal)(emitterSignals) !== -1 &&
+                                        R.findIndex(s => s === listenerSignal)(listenerSignals) !== -1) {
                                         // The 'dataUpdate' signal is special signal that requires a different handler
-                                        if (signal === 'dataUpdate') {
-                                            emitter.addSignalListener(signal, (name, data) => {
+                                        if (emitterSignal === 'dataUpdate') {
+                                            emitter.addSignalListener(emitterSignal, (name, data) => {
                                                 listener.remove(data.name, () => true).run();
                                                 listener.insert(data.name, data.values).run();
                                             });
                                         } else {
-                                            emitter.addSignalListener(signal, (name, data) => {
-                                                listener.signal(name, data).run();
+                                            emitter.addSignalListener(emitterSignal, (name, data) => {
+                                                listener.signal(listenerSignal, data).run();
                                             });
                                         }
                                     }

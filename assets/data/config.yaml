@@ -4,14 +4,12 @@ specs:
     - url: view1.vg.json
       name: view1
       # The bind array maps signals of other specs onto this spec
-      # note: the names of the signals have to be the same in both
-      # specs. This can be an annoying limitation so it might change
-      # in later versions
+      # note. Use a tuple to map signals with different names.
       bind:
-        - name: view2
+        - name: view2 # emitter
           signals:
-            - tooltip
-            - selectedCategory
+            - [info, tooltip] # [emitterSignal, listenerSignal] -> map emitter signal 'info' to listener signal'tooltip'
+            - selectedCategory # emitterSignal and listenerSignal are both 'selectedCategory'
             - dataUpdate
 
     - url: view2.vg.json
@@ -19,7 +17,7 @@ specs:
       bind:
           - name: view1
             signals:
-              - tooltip
+              - [tooltip, info]
               - selectedCategory
               - dataUpdate
 

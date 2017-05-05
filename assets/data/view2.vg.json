@@ -175,7 +175,7 @@
             ]
         },
         {
-            "name": "tooltip",
+            "name": "info",
             "value": {},
             "on": [
                 {
@@ -245,10 +245,10 @@
             "encode": {
                 "enter": {
                     "x": {
-                        "offset": 20
+                        "offset": 390
                     },
                     "y": {
-                        "offset": -30
+                        "offset": -20
                     },
                     "align": {
                         "value": "center"
@@ -261,11 +261,14 @@
                     },
                     "text": {
                         "value": ""
+                    },
+                    "fontWeight": {
+                        "value": "bold"
                     }
                 },
                 "update": {
                     "text": {
-                        "signal": "tooltip.amount ? (tooltip.category + ' ' + tooltip.amount) : ''"
+                        "signal": "info.amount ? (info.category + ' ' + info.amount) : ''"
                     }
                 }
             }
@@ -312,7 +315,7 @@
                     },
                     "fill": [
                         {
-                            "test": "datum === tooltip || datum.category === selectedCategory",
+                            "test": "datum === info || datum.category === selectedCategory",
                             "value": "orange"
                         },
                         {
@@ -321,7 +324,7 @@
                     ],
                     "size": [
                         {
-                            "test": "datum === tooltip",
+                            "test": "datum === info",
                             "value": 150
                         },
                         {
