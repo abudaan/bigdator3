@@ -1,8 +1,8 @@
 baseurl: ./assets/data/
 data: data.yaml # file containing the dataset that is used in all specs
-specs:
+specs: # array containing all specs that should be loaded
     - url: view1.vg.json
-      name: view1
+      name: view1 # listener
       # The bind array maps signals of other specs onto this spec
       # note. Use a tuple to map signals with different names.
       bind:
