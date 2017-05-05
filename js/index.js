@@ -12,7 +12,7 @@ const mapIndexed = R.addIndex(R.map);
 // and how the signals of each of these specs are mapped onto one and eachother.
 fetchYAML(`./assets/data/config.yaml?${now}`)
     .then((config) => {
-        console.log(config);
+        // debugger;
         const baseUrl: string = config.baseurl;
         // Step 2: load the file containing the dataset that is used in all specs.
         fetchYAML(`${baseUrl}${config.data}?${now}`)
@@ -29,11 +29,13 @@ fetchYAML(`./assets/data/config.yaml?${now}`)
                             elem.className = 'view';
                             if (app !== null) {
                                 app.appendChild(elem);
+                                const ds = R.clone(dataset);
                                 viewMap[name] = new vega.View(vega.parse(spec))
                                     .renderer('svg')
                                     // .logLevel(vega.Debug)
                                     .initialize(`#${name}`)
-                                    .insert(dataset.name, dataset.values)
+                                    // .insert(dataset.name, dataset.values)
+                                    .insert(ds.name, ds.values)
                                     .run();
                             }
                         }, values);
@@ -54,26 +56,28 @@ fetchYAML(`./assets/data/config.yaml?${now}`)
                                 R.forEach((signal) => {
                                     let emitterSignal = signal;
                                     let listenerSignal = signal;
-                                    if (R.isArrayLike(signal)) {
+                                    if (R.isArrayLike(signal) === true) {
                                         emitterSignal = signal[0];
                                         listenerSignal = signal[1];
                                     }
-                                    console.log(emitterSignal, listenerSignal);
+                                    // console.log(emitterSignal, emitterSignals, listenerSignal, listenerSignals);
                                     if (R.findIndex(s => s === emitterSignal)(emitterSignals) !== -1 &&
                                         R.findIndex(s => s === listenerSignal)(listenerSignals) !== -1) {
                                         // The 'dataUpdate' signal is special signal that requires a different handler
                                         if (emitterSignal === 'dataUpdate') {
                                             emitter.addSignalListener(emitterSignal, (name, data) => {
+                                                // console.log(name);
                                                 listener.remove(data.name, () => true).run();
                                                 listener.insert(data.name, data.values).run();
                                             });
                                         } else {
                                             emitter.addSignalListener(emitterSignal, (name, data) => {
+                                                // console.log(name, data);
                                                 listener.signal(listenerSignal, data).run();
                                             });
                                         }
                                     }
-                                }, b.signals);
+                                }, b.signals || []);
                             }, spec.bind);
                         }, config.specs);
                     });
