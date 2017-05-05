@@ -23,6 +23,74 @@
             ]
         }
     ],
+    "signals": [
+        {
+            "name": "dataUpdate",
+            "on": [
+                {
+                    "events": {
+                        "signal": "changeAmount"
+                    },
+                    "update": "{name: 'table', values: data('table')}"
+                }
+            ]
+        },
+        {
+            "name": "selectedCategory",
+            "value": {},
+            "on": [
+                {
+                    "events": [
+                        {
+                            "type": "mousedown",
+                            "markname": "point"
+                        }
+                    ],
+                    "update": "datum"
+                },
+                {
+                    "events": [
+                        {
+                            "type": "mouseup"
+                        }
+                    ],
+                    "update": "{}"
+                }
+            ]
+        },
+        {
+            "name": "changeAmount",
+            "value": {
+                "datum": {}
+            },
+            "on": [
+                {
+                    "events": "click, mousemove[event.buttons]{20}",
+                    "update": "{amount: round(invert('yscale', y())), datum: selectedCategory}"
+                }
+            ]
+        },
+        {
+            "name": "info",
+            "value": {},
+            "on": [
+                {
+                    "events": {
+                        "type": "mouseover",
+                        "markname": "point"
+                    },
+                    "update": "datum"
+                },
+                {
+                    "events": {
+                        "type": "mouseout",
+                        "markname": "point"
+                    },
+                    "update": "{}"
+                }
+            ]
+        }
+    ],
     "scales": [
         {
             "name": "xscale",
@@ -125,74 +193,6 @@
                     }
                 }
             }
-        }
-    ],
-    "signals": [
-        {
-            "name": "dataUpdate",
-            "on": [
-                {
-                    "events": {
-                        "signal": "changeAmount"
-                    },
-                    "update": "{name: 'table', values: data('table')}"
-                }
-            ]
-        },
-        {
-            "name": "selectedCategory",
-            "value": {},
-            "on": [
-                {
-                    "events": [
-                        {
-                            "type": "mousedown",
-                            "markname": "point"
-                        }
-                    ],
-                    "update": "datum"
-                },
-                {
-                    "events": [
-                        {
-                            "type": "mouseup"
-                        }
-                    ],
-                    "update": "{}"
-                }
-            ]
-        },
-        {
-            "name": "changeAmount",
-            "value": {
-                "datum": {}
-            },
-            "on": [
-                {
-                    "events": "click, mousemove[event.buttons]{20}",
-                    "update": "{amount: round(invert('yscale', y())), datum: selectedCategory}"
-                }
-            ]
-        },
-        {
-            "name": "info",
-            "value": {},
-            "on": [
-                {
-                    "events": {
-                        "type": "mouseover",
-                        "markname": "point"
-                    },
-                    "update": "datum"
-                },
-                {
-                    "events": {
-                        "type": "mouseout",
-                        "markname": "point"
-                    },
-                    "update": "{}"
-                }
-            ]
         }
     ],
     "marks": [

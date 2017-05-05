@@ -1,12 +1,15 @@
 {
   "name": "bigdator-3",
   "version": "1.0.0",
-  "description": "Communication between separate Vega3 views",
+  "description": "A runtime layer that enables communiction between Vega3 views that live in separate HTML elements",
   "main": "index.js",
   "scripts": {
     "start": "yarn gulp:develop",
     "gulp:develop": "NODE_ENV=develop ./node_modules/.bin/gulp develop"
   },
+  "keywords": [
+    "vega3", "signals", "communication", "interaction"
+  ],
   "author": "abudaan",
   "license": "MIT",
   "devDependencies": {
