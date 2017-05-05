@@ -273,7 +273,7 @@
           },
           "fill": [
             {
-              "test": "datum === tooltip || datum.category === selectedCategory.category",
+              "test": "datum.category === tooltip.category || datum.category === selectedCategory.category",
               "value": "orange"
             },
             {

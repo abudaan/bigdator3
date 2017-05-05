@@ -72,7 +72,7 @@ fetchYAML(`./assets/data/config.yaml?${now}`)
                                             });
                                         } else {
                                             emitter.addSignalListener(emitterSignal, (name, data) => {
-                                                // console.log(name, data);
+                                                console.log(name, data);
                                                 listener.signal(listenerSignal, data).run();
                                             });
                                         }

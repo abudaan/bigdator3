@@ -315,7 +315,7 @@
                     },
                     "fill": [
                         {
-                            "test": "datum === info || datum.category === selectedCategory.category",
+                            "test": "datum.category === info.category || datum.category === selectedCategory.category",
                             "value": "orange"
                         },
                         {
@@ -324,7 +324,7 @@
                     ],
                     "size": [
                         {
-                            "test": "datum === info",
+                            "test": "datum.category === info.category",
                             "value": 150
                         },
                         {
