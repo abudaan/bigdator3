@@ -17,7 +17,7 @@ What this does is setting the value of `information` in view2 to the value of `t
 
 If you take a look at the [yaml config file](https://github.com/abudaan/bigdator3/blob/master/assets/data/config.yaml) you see that it starts with a url to the dataset that is used in the specs of this application. Because this project is still a proof of concept you currently you can only add one dataset. The dataset is loaded first.
 
-The config also describes which specs have to be loaded. After a spec is loaded a div is created for this spec and the div is added to the HTML page. This id of this div is set to the name of the spec. The spec will be initialized using the dataset that was loaded in the previous step.
+The config also describes which specs have to be loaded. After a spec is loaded a div is created for this spec and the div is added to the HTML page. The id of this div is set to the name of the spec. The spec will be initialized using the dataset that was loaded in the previous step.
 
 In the `bind` array of every spec you can specify per spec which signal of which spec should be mapped:
 ```yaml
@@ -46,10 +46,10 @@ specs:
 
 ### Installation and running the project
 
-You need to have git, nodejs and npm or yarn installed on your computer.
+You need to have git, nodejs and yarn (or npm) installed on your computer.
 
 - clone the repository
 - `yarn install` (or `npm install`)
 - `yarn start` (or `npm start`)
 
-The `yarn start` command will build the necessary js and css files and start a server on `http://localhost:5003`. If you don't want to go through all the hassle of installing here is a [live example](http://app3.bigdator.nl).
+The `yarn start` command will build the necessary js and css files and start a server on `http://localhost:5003`. If you don't want to go through all the hassle of installing, here is the [live version](http://app3.bigdator.nl).
