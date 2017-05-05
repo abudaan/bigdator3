@@ -5,6 +5,7 @@ import sourcemaps from 'gulp-sourcemaps';
 import gutil from 'gulp-util';
 import sass from 'gulp-sass';
 import concat from 'gulp-concat';
+import connect from 'gulp-connect';
 import autoprefixer from 'gulp-autoprefixer';
 import buffer from 'vinyl-buffer';
 import source from 'vinyl-source-stream';
@@ -27,6 +28,14 @@ const targets = {
     js: './assets/js/',
     css: './assets/css/',
 };
+
+gulp.task('server', (done) => {
+    connect.server({
+        root: './',
+        port: 8333,
+    });
+    done();
+});
 
 const logBrowserifyError = (e) => {
     gutil.log(gutil.colors.red(e.message));
@@ -118,5 +127,6 @@ gulp.task('develop', gulp.series(
     'live_reload',
     gulp.parallel(
         'watch_css',
+        'server',
     ),
 ));

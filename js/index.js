@@ -1,38 +1,4 @@
 // @flow
-import 'babel-polyfill';
-import R from 'ramda';
-import { fetchJSON, fetchYAML } from './util/fetch_helpers';
-
-const vega = global.vega; // coding like it's 1999
-const now: number = Date.now();
-const app: null | HTMLElement = document.getElementById('app');
-const mapIndexed = R.addIndex(R.map);
-
-type BindType = {
-    name: string,
-    signals: string | [string, string],
-};
-type SpecType = {
-    url: string,
-    name: string,
-    bind: BindType[],
-};
-type DataType = {
-    amount: number,
-    category: string,
-};
-type DataSetType = {
-    name: string,
-    values: DataType[],
-};
-type ViewMapType = {
-    [id: string]: vega.View,
-};
-type ConfigType = {
-    baseurl: string,
-    data: string,
-    specs: SpecType[],
-};
 
 // step 1: Load application config; this is a yaml file that describes the
 // Vega specs that are used and how the signals of each of these specs should
@@ -47,6 +13,16 @@ type ConfigType = {
 // step 4: Here we apply all mappings of signals described in the yaml file.
 // Before the listeners are added we check if the sigals exist in both the
 // emitter and the listeners.
+
+import 'babel-polyfill';
+import R from 'ramda';
+import { fetchJSON, fetchYAML } from './util/fetch_helpers';
+
+const vega = global.vega; // coding like it's 1999
+const now: number = Date.now();
+const app: null | HTMLElement = document.getElementById('app');
+const mapIndexed = R.addIndex(R.map);
+const configUrl: string = './assets/data/config.yaml';
 
 // step 3
 const setupViews = (promises: Promise<*>[], names: string[], dataset: DataSetType): Promise<*> => {
@@ -93,9 +69,13 @@ const mapSignals = (specs: SpecType[], viewMap: ViewMapType) => {
                     emitterSignal = signal[0];
                     listenerSignal = signal[1];
                 }
+                // check if the signals exist
+                const emitterHasSignal = R.findIndex((s: string): boolean =>
+                    s === emitterSignal)(emitterSignals) !== -1;
+                const listenerHasSignal = R.findIndex((s: string): boolean =>
+                    s === listenerSignal)(listenerSignals) !== -1;
                 // console.log(emitterSignal, emitterSignals, listenerSignal, listenerSignals);
-                if (R.findIndex((s: string): boolean => s === emitterSignal)(emitterSignals) !== -1 &&
-                    R.findIndex((s: string): boolean => s === listenerSignal)(listenerSignals) !== -1) {
+                if (emitterHasSignal && listenerHasSignal) {
                     // The 'dataUpdate' signal is special signal that requires a different handler
                     if (emitterSignal === 'dataUpdate') {
                         emitter.addSignalListener(emitterSignal,
@@ -117,7 +97,7 @@ const mapSignals = (specs: SpecType[], viewMap: ViewMapType) => {
 };
 
 // step 1: load config
-fetchYAML(`./assets/data/config.yaml?${now}`).then((config: ConfigType) => {
+fetchYAML(`${configUrl}?${now}`).then((config: ConfigType) => {
     // step 2: load dataset
     const baseUrl: string = config.baseurl;
     fetchYAML(`${baseUrl}${config.data}?${now}`).then((dataset: DataSetType) => {
