@@ -4,3 +4,4 @@ flow-typed/npm/
 .vscode
 yarn.lock
 index2.html
+assets/js/app.js
