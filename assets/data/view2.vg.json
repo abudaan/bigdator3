@@ -76,6 +76,9 @@
                                     "type": "mouseup"
                                 }
                             ]
+                        },
+                        {
+                            "type": "click"
                         }
                     ],
                     "update": "{amount: round(invert('yscale', y())), datum: selectedCategory}"

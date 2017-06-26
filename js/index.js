@@ -69,8 +69,6 @@ const mapSignals = (specs: SpecType[], viewMap: ViewMapType) => {
                     emitterSignal = signal[0];
                     listenerSignal = signal[1];
                 }
-
-
                 // check if the signals exist
                 const emitterHasSignal = R.findIndex((s: string): boolean =>
                     s === emitterSignal)(emitterSignals) !== -1;
