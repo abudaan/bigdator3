@@ -80,7 +80,7 @@ const mapSignals = (specs: SpecType[], viewMap: ViewMapType) => {
                     if (emitterSignal === 'dataUpdate') {
                         emitter.addSignalListener(emitterSignal,
                             (name: string, data: { name: string, values: DataType[] }) => {
-                                // console.log(name);
+                                // console.log(data.name, data.values);
                                 listener.remove(data.name, (): boolean => true).run();
                                 listener.insert(data.name, data.values).run();
                             });

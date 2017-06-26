@@ -65,7 +65,19 @@
             },
             "on": [
                 {
-                    "events": "click, mousemove[event.buttons]{20}",
+                    "events": [
+                        {
+                            "type": "mousemove",
+                            "between": [
+                                {
+                                    "type": "mousedown"
+                                },
+                                {
+                                    "type": "mouseup"
+                                }
+                            ]
+                        }
+                    ],
                     "update": "{amount: round(invert('yscale', y())), datum: selectedCategory}"
                 }
             ]
