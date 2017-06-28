@@ -10,14 +10,15 @@ specs: # array containing all specs that should be loaded
           signals:
             - [info, tooltip] # [emitterSignal, listenerSignal] -> map emitter signal 'info' to listener signal'tooltip'
             - selectedCategory # emitterSignal and listenerSignal are both 'selectedCategory'
-            - dataUpdate
+            - changeAmount
+            # - dataUpdate
 
     - url: view2.vg.json
       name: view2
       bind:
-          - name: view1
-            signals:
-              - [tooltip, info]
-              - selectedCategory
-              - dataUpdate
-
+        - name: view1
+          signals:
+            - [tooltip, info]
+            - selectedCategory
+            - changeAmount
+            # - dataUpdate
